@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:state_flutter/data/repositories/todo/database.dart';
+import 'package:state_flutter/ui/home/view_models/todo_viewmodel.dart';
 import 'package:state_flutter/ui/home/widgets/todo_screen.dart';
 
 void main() async {
   await Hive.initFlutter();
   await Hive.openBox('mybox');
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final viewModel = TodoViewModel(db: TodoDataBase());
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: TodoPage(),
+      home: TodoScreen(viewModel: viewModel),
       theme: ThemeData(primarySwatch: Colors.yellow),
     );
   }

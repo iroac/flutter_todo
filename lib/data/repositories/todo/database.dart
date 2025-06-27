@@ -6,18 +6,18 @@ class TodoDataBase {
   // reference our box
   final _myBox = Hive.box('mybox');
 
-  void createInitialData() {
+  createInitialData() {
     toDoList = [
       ['Make Tutorial', false],
       ['Do Exercise', false],
     ];
   }
 
-  void loadData() {
+  loadData() {
     toDoList = _myBox.get("TODOLIST");
   }
 
-  void updateDataBase() {
-    _myBox.put('TODOLIST', toDoList);
+  Future<void> updateDataBase() {
+    return _myBox.put('TODOLIST', toDoList);
   }
 }

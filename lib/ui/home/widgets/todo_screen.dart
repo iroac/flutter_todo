@@ -1,44 +1,21 @@
-import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
-import 'package:state_flutter/ui/core/ui/todo_tile.dart';
-import 'package:state_flutter/data/repositories/todo/database.dart';
-import 'package:state_flutter/ui/core/ui/dialog_box.dart';
+import 'dart:developer';
 
-class TodoPage extends StatefulWidget {
-  const TodoPage({super.key});
+import 'package:flutter/material.dart';
+import 'package:state_flutter/ui/core/ui/dialog_box.dart';
+import 'package:state_flutter/ui/core/ui/todo_tile.dart';
+import 'package:state_flutter/ui/home/view_models/todo_viewmodel.dart';
+
+class TodoScreen extends StatefulWidget {
+  const TodoScreen({super.key, required this.viewModel});
+
+  final TodoViewModel viewModel;
 
   @override
-  State<TodoPage> createState() => _TodoPageState();
+  State<TodoScreen> createState() => _TodoScreenState();
 }
 
-class _TodoPageState extends State<TodoPage> {
+class _TodoScreenState extends State<TodoScreen> {
   final _controller = TextEditingController();
-
-  final _myBox = Hive.box('mybox');
-  TodoDataBase db = TodoDataBase();
-
-  void checkBoxChanged(bool? value, int index) {
-    setState(() {
-      db.toDoList[index][1] = value;
-    });
-    db.updateDataBase();
-  }
-
-  void checkBoxDelete(int index) {
-    setState(() {
-      db.toDoList.removeAt(index);
-    });
-    db.updateDataBase();
-  }
-
-  void saveNewTask() {
-    setState(() {
-      db.toDoList.add([_controller.text, false]);
-    });
-    Navigator.of(context).pop();
-    _controller.text = "";
-    db.updateDataBase();
-  }
 
   void createNewTask() {
     showDialog(
@@ -47,22 +24,25 @@ class _TodoPageState extends State<TodoPage> {
         return DialogBox(
           controller: _controller,
           onCancel: () => Navigator.of(context).pop(),
-          onSave: saveNewTask,
+          onSave: () {
+            widget.viewModel.saveNewTask(_controller.text);
+            Navigator.of(context).pop();
+          },
         );
       },
     );
   }
 
   @override
-  void initState() {
-    // if this is the 1st time ever opening the app, then create default data
-    if (_myBox.get("TODOLIST") == null) {
-      db.createInitialData();
-    } else {
-      db.loadData();
-    }
+  void didUpdateWidget(covariant TodoScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    log('update screen');
+  }
 
+  @override
+  void initState() {
     super.initState();
+    widget.viewModel.load();
   }
 
   @override
@@ -78,14 +58,21 @@ class _TodoPageState extends State<TodoPage> {
         backgroundColor: Colors.yellow,
         child: Icon(Icons.add, color: Colors.black),
       ),
-      body: ListView.builder(
-        itemCount: db.toDoList.length,
-        itemBuilder: (context, index) {
-          return TodoTile(
-            taskName: db.toDoList[index][0],
-            taskCompleted: db.toDoList[index][1],
-            onChanged: (value) => checkBoxChanged(value, index),
-            handleDelete: (context) => checkBoxDelete(index),
+      body: ListenableBuilder(
+        listenable: widget.viewModel,
+        builder: (context, _) {
+          return ListView.builder(
+            itemCount: widget.viewModel.toDoList.length,
+            itemBuilder: (context, index) {
+              return TodoTile(
+                taskName: widget.viewModel.toDoList[index][0],
+                taskCompleted: widget.viewModel.toDoList[index][1],
+                onChanged: (value) =>
+                    widget.viewModel.checkBoxChanged(value, index),
+                handleDelete: (context) =>
+                    widget.viewModel.checkBoxDelete(index),
+              );
+            },
           );
         },
       ),
