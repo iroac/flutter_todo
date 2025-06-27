@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:state_flutter/components/todo_tile.dart';
-import 'package:state_flutter/data/database.dart';
-import 'package:state_flutter/util/dialog_box.dart';
+import 'package:state_flutter/ui/core/ui/todo_tile.dart';
+import 'package:state_flutter/data/repositories/todo/database.dart';
+import 'package:state_flutter/ui/core/ui/dialog_box.dart';
 
 class TodoPage extends StatefulWidget {
   const TodoPage({super.key});

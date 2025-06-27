@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:state_flutter/components/my_button.dart';
+import 'package:state_flutter/ui/core/ui/my_button.dart';
 
 class DialogBox extends StatelessWidget {
   final TextEditingController? controller;
