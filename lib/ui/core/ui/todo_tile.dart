@@ -34,7 +34,7 @@ class TodoTile extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Colors.yellow,
+            color: Colors.blue,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(

@@ -4,8 +4,7 @@ import 'package:state_flutter/data/repositories/todo/database.dart';
 
 class TodoViewModel extends ChangeNotifier {
   TodoViewModel({required TodoDataBase db}) : _db = db {
-    _db.loadData();
-    toDoList = List.from(_db.toDoList);
+    toDoList = _db.toDoList;
   }
 
   final TodoDataBase _db;
@@ -27,7 +26,7 @@ class TodoViewModel extends ChangeNotifier {
       _db.toDoList.removeAt(index);
       await _db.updateDataBase();
     } finally {
-      toDoList = _db.toDoList.removeAt(index);
+      toDoList = _db.toDoList;
       notifyListeners();
     }
   }

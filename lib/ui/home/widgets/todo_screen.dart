@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:state_flutter/ui/core/ui/dialog_box.dart';
 import 'package:state_flutter/ui/core/ui/todo_tile.dart';
@@ -34,12 +32,6 @@ class _TodoScreenState extends State<TodoScreen> {
   }
 
   @override
-  void didUpdateWidget(covariant TodoScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    log('update screen');
-  }
-
-  @override
   void initState() {
     super.initState();
     widget.viewModel.load();
@@ -48,14 +40,14 @@ class _TodoScreenState extends State<TodoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
+      backgroundColor: Colors.blue[200],
       appBar: AppBar(
-        backgroundColor: Colors.yellow,
+        backgroundColor: Colors.blue,
         title: Center(child: Text('TO DO')),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: createNewTask,
-        backgroundColor: Colors.yellow,
+        backgroundColor: Colors.blue,
         child: Icon(Icons.add, color: Colors.black),
       ),
       body: ListenableBuilder(
