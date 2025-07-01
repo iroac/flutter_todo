@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:state_flutter/ui/core/themes/colors.dart';
 import 'package:state_flutter/ui/core/ui/my_button.dart';
 
 class DialogBox extends StatelessWidget {
@@ -15,7 +16,7 @@ class DialogBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: Colors.blue[300],
+      backgroundColor: Colors.red[300],
       content: SizedBox(
         height: 120,
         child: Column(
@@ -27,7 +28,7 @@ class DialogBox extends StatelessWidget {
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
+                  borderSide: BorderSide(color: AppColors.primary),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 hintText: 'Add a new task',

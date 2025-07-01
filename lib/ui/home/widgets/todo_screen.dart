@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:state_flutter/ui/core/themes/colors.dart';
 import 'package:state_flutter/ui/core/ui/dialog_box.dart';
 import 'package:state_flutter/ui/core/ui/todo_tile.dart';
 import 'package:state_flutter/ui/home/view_models/todo_viewmodel.dart';
@@ -40,15 +41,11 @@ class _TodoScreenState extends State<TodoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[200],
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        title: Center(child: Text('TO DO')),
-      ),
+      backgroundColor: AppColors.background,
       floatingActionButton: FloatingActionButton(
         onPressed: createNewTask,
-        backgroundColor: Colors.blue,
-        child: Icon(Icons.add, color: Colors.black),
+        backgroundColor: AppColors.primary,
+        child: Icon(Icons.add, color: AppColors.background),
       ),
       body: ListenableBuilder(
         listenable: widget.viewModel,
