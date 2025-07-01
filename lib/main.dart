@@ -70,7 +70,7 @@ class _MyNavigationBottomState extends State<MyNavigationBottom> {
       ),
       body: <Widget>[
         TodoScreen(viewModel: viewModelHome),
-        HistoryScreen(),
+        HistoryScreen(viewModel: viewModelHome),
       ][currentPageIndex],
     );
   }
