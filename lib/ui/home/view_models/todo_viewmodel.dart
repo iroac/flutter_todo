@@ -1,39 +1,56 @@
 import 'package:hive/hive.dart';
 import 'package:flutter/foundation.dart';
 import 'package:state_flutter/data/repositories/todo/database.dart';
+import 'package:state_flutter/models/todo_model.dart';
 
 class TodoViewModel extends ChangeNotifier {
   TodoViewModel({required TodoDataBase db}) : _db = db {
-    toDoList = _db.toDoList;
+    toDoGroups = _db.toDoGroups;
   }
 
   final TodoDataBase _db;
   final _myBox = Hive.box('mybox');
-  List<dynamic> toDoList = [];
+  List<ToDoGroup> toDoGroups = [];
 
-  Future<void> checkBoxChanged(bool? value, int index) async {
+  Future<void> checkBoxChanged(bool? value, int index, String groupName) async {
     try {
-      _db.toDoList[index][1] = value;
+      final group = _db.toDoGroups.firstWhere(
+        (g) => g.groupName == groupName,
+        orElse: () => throw Exception('Group "$groupName" not found'),
+      );
+
+      group.todoList[index][1] = value;
       await _db.updateDataBase();
     } finally {
-      toDoList = _db.toDoList;
+      toDoGroups = _db.toDoGroups;
       notifyListeners();
     }
   }
 
-  Future<void> checkBoxDelete(int index) async {
+  Future<void> checkBoxDelete(int index, String groupName) async {
     try {
-      _db.toDoList.removeAt(index);
+      final group = _db.toDoGroups.firstWhere(
+        (g) => g.groupName == groupName,
+        orElse: () => throw Exception('Group "$groupName" not found'),
+      );
+
+      group.todoList.removeAt(index);
       await _db.updateDataBase();
     } finally {
-      toDoList = _db.toDoList;
+      toDoGroups = _db.toDoGroups;
       notifyListeners();
     }
   }
 
-  Future<void> saveNewTask(String text) async {
+  Future<void> saveNewTask(String groupName, String text) async {
     try {
-      _db.toDoList.add([text, false]);
+      final group = _db.toDoGroups.firstWhere(
+        (g) => g.groupName == groupName,
+        orElse: () => throw Exception('Group "$groupName" not found'),
+      );
+
+      group.todoList.add([text, false]);
+
       text = "";
       await _db.updateDataBase();
     } finally {
@@ -42,12 +59,12 @@ class TodoViewModel extends ChangeNotifier {
   }
 
   void load() {
-    if (_myBox.get("TODOLIST") == null) {
+    if (_myBox.get("TODOGROUPS") == null) {
       _db.createInitialData();
-      toDoList = _db.toDoList;
+      toDoGroups = _db.toDoGroups;
     } else {
       _db.loadData();
-      toDoList = _db.toDoList;
+      toDoGroups = _db.toDoGroups;
     }
   }
 }

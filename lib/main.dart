@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:state_flutter/data/repositories/todo/database.dart';
+import 'package:state_flutter/models/todo_model.dart';
 import 'package:state_flutter/ui/core/themes/colors.dart';
 import 'package:state_flutter/ui/history/history_screen.dart';
 import 'package:state_flutter/ui/home/view_models/todo_viewmodel.dart';
@@ -8,6 +9,7 @@ import 'package:state_flutter/ui/home/widgets/todo_screen.dart';
 
 void main() async {
   await Hive.initFlutter();
+  Hive.registerAdapter(ToDoGroupAdapter());
   await Hive.openBox('mybox');
   runApp(MyApp());
 }

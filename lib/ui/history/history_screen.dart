@@ -9,9 +9,10 @@ class HistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final completedTasks = viewModel.toDoList
-        .where((task) => task[1] == true)
-        .toList();
+    final completedTasks = [
+      for (var g in viewModel.toDoGroups)
+        ...g.todoList.where((item) => item[1]),
+    ];
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -28,23 +29,25 @@ class HistoryScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 16),
                 ),
               )
-            : ListView.builder(
+            : ListView.separated(
                 itemCount: completedTasks.length,
                 itemBuilder: (context, index) {
-                  final task = completedTasks[index];
+                  final task = completedTasks[index][0];
                   return ListTile(
                     leading: const Icon(
                       Icons.check_circle,
-                      color: Color.fromARGB(255, 175, 76, 76),
+                      color: AppColors.primary,
                     ),
                     title: Text(
-                      task[0],
+                      task,
                       style: const TextStyle(
                         decoration: TextDecoration.lineThrough,
                       ),
                     ),
                   );
                 },
+                separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(),
               ),
       ),
     );

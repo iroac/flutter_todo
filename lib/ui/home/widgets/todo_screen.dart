@@ -24,7 +24,7 @@ class _TodoScreenState extends State<TodoScreen> {
           controller: _controller,
           onCancel: () => Navigator.of(context).pop(),
           onSave: () {
-            widget.viewModel.saveNewTask(_controller.text);
+            widget.viewModel.saveNewTask(_controller.text, 'Primeiro Grupo');
             Navigator.of(context).pop();
           },
         );
@@ -49,17 +49,48 @@ class _TodoScreenState extends State<TodoScreen> {
       ),
       body: ListenableBuilder(
         listenable: widget.viewModel,
-        builder: (context, _) {
+        builder: (context, child) {
           return ListView.builder(
-            itemCount: widget.viewModel.toDoList.length,
+            itemCount: widget.viewModel.toDoGroups.length,
             itemBuilder: (context, index) {
-              return TodoTile(
-                taskName: widget.viewModel.toDoList[index][0],
-                taskCompleted: widget.viewModel.toDoList[index][1],
-                onChanged: (value) =>
-                    widget.viewModel.checkBoxChanged(value, index),
-                handleDelete: (context) =>
-                    widget.viewModel.checkBoxDelete(index),
+              final currentGroup = widget.viewModel.toDoGroups[index].groupName;
+              return Center(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Text(
+                        currentGroup,
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount:
+                          widget.viewModel.toDoGroups[index].todoList.length,
+                      itemBuilder: (context, iItem) {
+                        final task =
+                            widget.viewModel.toDoGroups[index].todoList[iItem];
+                        return TodoTile(
+                          taskName: task[0],
+                          taskCompleted: task[1],
+                          onChanged: (val) => widget.viewModel.checkBoxChanged(
+                            val,
+                            iItem,
+                            currentGroup,
+                          ),
+                          handleDelete: (context) => widget.viewModel
+                              .checkBoxDelete(iItem, currentGroup),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               );
             },
           );
